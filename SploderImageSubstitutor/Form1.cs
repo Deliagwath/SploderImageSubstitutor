@@ -32,7 +32,7 @@ namespace SploderImageSubstitutor
 
         private void Log(string log)
         {
-            TextBoxLog.Text += String.Format("{0}{1}", log, Environment.NewLine);
+            TextBoxLog.AppendText(String.Format("{0}{1}", log, Environment.NewLine));
         }
 
         private string XMLPath;
@@ -121,10 +121,7 @@ namespace SploderImageSubstitutor
 
             // Save to file
             Log(String.Format("Saving to {0}", this.XMLPath));
-            try
-            {
-                this.Game.Save(this.XMLPath);
-            }
+            try { this.Game.Save(this.XMLPath); }
             catch (Exception err)
             {
                 Log("Error while saving");
@@ -134,6 +131,24 @@ namespace SploderImageSubstitutor
             {
                 Log("Saved");
             }
+        }
+
+        private void DebugButton_Click(object sender, EventArgs e)
+        {
+            List<string> b64s = this.ImagePaths.Select((imagePath, index) =>
+            {
+                using (Image image = Image.FromFile(imagePath))
+                {
+                    using (MemoryStream ms = new MemoryStream())
+                    {
+                        image.Save(ms, image.RawFormat);
+                        byte[] imageBytes = ms.ToArray();
+                        Log(String.Format("Image Converted: {0}/{1}", index + 1, this.ImagePaths.Count));
+                        return Convert.ToBase64String(imageBytes);
+                    }
+                }
+            }).ToList();
+            b64s.ForEach(b => Log(b));
         }
     }
 }

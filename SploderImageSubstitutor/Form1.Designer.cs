@@ -75,6 +75,8 @@
             this.DebugButton.TabIndex = 3;
             this.DebugButton.Text = "Debug";
             this.DebugButton.UseVisualStyleBackColor = true;
+            this.DebugButton.Visible = false;
+            this.DebugButton.Click += new System.EventHandler(this.DebugButton_Click);
             // 
             // XMLFileDialog
             // 
